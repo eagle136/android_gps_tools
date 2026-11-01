@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 定位（GPS + GNSS 状态回调必需） -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 网络：AGPS 下载 XTRA 星历预测（加速定位必需），安装时自动授予 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 前台服务：后台保持定位状态（防 MIUI/ROM 冻结 GPS，回前台免冷启动） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- 通知（API 33+）：前台服务保活通知显示 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- 唤醒锁：记录中持有 PARTIAL_WAKE_LOCK 防 Doze 休眠导致 GPS 采样中断（停止/暂停记录即释放） -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 存储：备份/还原 zip 写 /sdcard 根目录。
+         Android 9 及以下 + Android 10（requestLegacyExternalStorage）走 WRITE 权限；
+         Android 11+ 需"所有文件访问权限"（MANAGE_EXTERNAL_STORAGE，首次备份/还原时跳系统设置授予）。
+         行驶记录 csv 本身保存在应用私有外部目录，任何版本都不需要这些权限。 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <!-- 传感器仅用于指南针，无需权限 -->
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.GPS工具箱">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.GPS工具箱"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".LocationKeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+    </application>
+
+</manifest>

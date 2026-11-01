@@ -1,0 +1,24 @@
+# Gradle / 构建产物
+.gradle/
+build/
+/captures
+.externalNativeBuild/
+.cxx/
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+
+# 本机 SDK 路径
+local.properties
+
+# 采集工具缓存、截图与本地脚本
+.workbuddy/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 本地签名目录（密钥不入库，CI 通过 GitHub Secrets 注入）
+/signing/
