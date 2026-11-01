@@ -94,6 +94,7 @@ jobs:
 
       - name: Build release APK
         env:
+          SIGNING_STORE_FILE: signing/gps-release.jks
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -110,7 +111,13 @@ jobs:
           set -euo pipefail
           version="${{ steps.version.outputs.name }}"
           apk="GPS-Toolbox-${version}.apk"
-          cp app/build/outputs/apk/release/app-release.apk "$apk"
+          src="app/build/outputs/apk/release/app-release.apk"
+          if [[ ! -f "$src" ]]; then
+            echo "::error::未生成已签名 APK，检查签名 Secrets 与 SIGNING_STORE_FILE"
+            ls -l app/build/outputs/apk/release || true
+            exit 1
+          fi
+          cp "$src" "$apk"
           sha256sum "$apk" > "$apk.sha256"
           cat "$apk.sha256"
 
