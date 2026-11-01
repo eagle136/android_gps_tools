@@ -44,20 +44,7 @@ Android GPS/GNSS 测试工具，包名 `com.gpstesttools`。用于查看定位�
 
 ## 签名
 
-发布签名是随机生成的密钥，不随仓库公开：本地放在 `signing/`（已被 `.gitignore` 忽略），CI 通过 GitHub Actions Secrets 注入，保证每次 Release 使用同一签名，支持版本覆盖升级。
-
-需要在仓库 Settings → Secrets and variables → Actions 配置：
-
-| Secret | 内容 |
-| --- | --- |
-| `SIGNING_KEYSTORE_BASE64` | `base64 -w0 signing/gps-release.jks` 的输出 |
-| `SIGNING_STORE_PASSWORD` | keystore 密码 |
-| `SIGNING_KEY_ALIAS` | `gps-release` |
-| `SIGNING_KEY_PASSWORD` | key 密码 |
-
-本地构建直接读取 `signing/keystore.properties`；也可用 `SIGNING_*` 环境变量临时覆盖。
-
-> 注意：更换签名后，旧签名的已安装版本无法直接覆盖升级，需要先卸载。
+发布签名为随机生成的密钥。
 
 ## 自动发布
 
